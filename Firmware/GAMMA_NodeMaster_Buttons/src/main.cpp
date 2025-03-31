@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "Hardware_NodeMaster.h"
 
 // Decodificación de trama recibida desde puerto Serial
