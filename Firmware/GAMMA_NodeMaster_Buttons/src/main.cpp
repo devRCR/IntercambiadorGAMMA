@@ -23,6 +23,13 @@ int     value_Serial2     = 0;
 int     MODE_AUTO = 0;  
 boolean FLAG_NEXT = false; 
 
+// Prototipos de Funciones Faltantes
+bool Check_Line_Rx();
+void Exec_Command_Rx();
+bool Check_Line_Rx_RS485();
+void Exec_Command_Rx_RS485();
+
+
 void setup() {
   pinMode(BTN_SAMPLE_NEXT,  INPUT_PULLUP);
   pinMode(BTN_SAMPLE_CYCLE, INPUT_PULLUP);  
