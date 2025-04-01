@@ -1,3 +1,26 @@
+/*******************************************************************************************
+ * Proyecto: Control Distribuido - Nodo Maestro (Botonera)
+ * Archivo:  main.cpp / sketch_GAMMA_NodeMaster_Buttons.ino
+ * Autores:  O. Baltuano, R. Chan
+ * Laboratorio de Desarrollo Electrónico
+ * INSTITUTO PERUANO DE ENERGÍA NUCLEAR (IPEN)
+ *
+ * Descripción:
+ * Este módulo implementa el nodo maestro del sistema de control distribuido para
+ * un intercambiador Gamma. Gestiona la lectura de botones físicos y el envío de
+ * comandos seriales a los nodos esclavos.
+ *
+ * Licencia:
+ * Este código se distribuye bajo los términos de la licencia Creative Commons
+ * Atribución-NoComercial 4.0 Internacional (CC BY-NC 4.0).
+ *
+ * - Permitido: uso, copia y modificación con fines no comerciales, indicando autores.
+ * - Prohibido: uso o redistribución con fines comerciales sin autorización expresa.
+ * - Si se modifica este archivo, se debe declarar el autor del cambio.
+ *
+ * Más información: https://creativecommons.org/licenses/by-nc/4.0/
+ *******************************************************************************************/
+
 #include <Arduino.h>
 #include "Hardware_NodeMaster.h"
 
