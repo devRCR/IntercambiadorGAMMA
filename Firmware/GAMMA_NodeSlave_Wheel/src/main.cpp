@@ -49,7 +49,7 @@ void setup() {
   digitalWrite(BUZZER,HIGH);
   delay(250);
   digitalWrite(BUZZER,LOW);
-  if (DEBUG) Serial.println("Iniciando...");
+  if (DEBUG) Serial.println("Wheel Node starting...");
 
   // --- CONTROL DE LA MESA NIVELADORA ---
   pinMode(SENSOR_TOP1,INPUT_PULLUP);
@@ -258,19 +258,22 @@ int StringToInt(String cadena) {
 void Exec_Command_Rx_NodeMaster() {
     switch (command_NodeMaster) {
             case 'S' : 
-                       if (value_NodeMaster==0) SERIAL_ACTION = SERIAL_SAMPLE_NEXT;    // CAMBIO DE MUESTRA (NEXT)
-                       if (value_NodeMaster==1) SERIAL_ACTION = SERIAL_SAMPLE_CYCLE;   // CAMBIO A POSICION INICIAL  
-                       break;
+                    Serial.println("Comando recibido: ");
+                    if (value_NodeMaster==0) SERIAL_ACTION = SERIAL_SAMPLE_NEXT;    // CAMBIO DE MUESTRA (NEXT)
+                    if (value_NodeMaster==1) SERIAL_ACTION = SERIAL_SAMPLE_CYCLE;   // CAMBIO A POSICION INICIAL  
+                    break;
             case 'H' : 
-                       if (value_NodeMaster==0) SERIAL_ACTION = SERIAL_DOOR_OPEN;      // ABRIR TAPA BLINDAJE
-                       if (value_NodeMaster==1) SERIAL_ACTION = SERIAL_DOOR_CLOSE;     // CERRAR TAPA DE BLINDAJE
-                       break;
-            case 'P' : 
-                       if (value_NodeMaster==0) SERIAL_ACTION = SERIAL_TABLE_DOWN;     // BAJAR MESA NIVELADORA
-                       if (value_NodeMaster==1) SERIAL_ACTION = SERIAL_TABLE_UP;       // SUBIR MESA NIVELADORA
-                       break;
+                    Serial.println("Comando recibido: ");
+                    if (value_NodeMaster==0) SERIAL_ACTION = SERIAL_DOOR_OPEN;      // ABRIR TAPA BLINDAJE
+                    if (value_NodeMaster==1) SERIAL_ACTION = SERIAL_DOOR_CLOSE;     // CERRAR TAPA DE BLINDAJE
+                    break;
+            case 'P' :
+                    Serial.println("Comando recibido: ");
+                    if (value_NodeMaster==0) SERIAL_ACTION = SERIAL_TABLE_DOWN;     // BAJAR MESA NIVELADORA
+                    if (value_NodeMaster==1) SERIAL_ACTION = SERIAL_TABLE_UP;       // SUBIR MESA NIVELADORA
+                    break;
             default  : 
-                       value_NodeMaster = 0;     // No tiene importancia
+                    value_NodeMaster = 0;     // No tiene importancia
     }
 }
 
