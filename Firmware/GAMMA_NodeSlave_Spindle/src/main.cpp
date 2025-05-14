@@ -22,7 +22,6 @@
 
 #include <Arduino.h>
 #include <LiquidCrystal.h>
-//#include <SoftwareSerial.h>
 #include "Hardware_NodeSlave.h"
 
 
@@ -81,13 +80,6 @@ void setup() {
 
   SerialNodeMaster.begin(9600);
   
-//  pinMode(RS485_RE,OUTPUT);
-//  digitalWrite(RS485_RE,LOW);
-//  pinMode(RS485_DE,OUTPUT);
-//  digitalWrite(RS485_RE,LOW);  
-  
-//  mySerial.begin(9600);
-
   //GO_FULL_RIGHT = false;
   FLAG_RUNNING_MANUAL = false;  
   
