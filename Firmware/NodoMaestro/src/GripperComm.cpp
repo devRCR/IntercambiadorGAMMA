@@ -9,6 +9,7 @@ static int ackValue = 0;
 
 void initGripperComm() {
     SerialGripper.begin(9600);
+    while (SerialGripper.available()) SerialGripper.read();  // Limpia residuos
     SerialGUI.println("Comunicación con GripperNode iniciada.");
 }
 

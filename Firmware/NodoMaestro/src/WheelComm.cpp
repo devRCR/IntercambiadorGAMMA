@@ -9,6 +9,7 @@ static int ackValue = 0;
 
 void initWheelComm() {
     SerialWheel.begin(9600);
+    while (SerialWheel.available()) SerialWheel.read();  // Limpia residuos
     SerialGUI.println("Comunicación con Nodo Wheel iniciada.");
 }
 

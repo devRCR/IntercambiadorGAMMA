@@ -7,6 +7,8 @@ void setup() {
     initGUI();
     initWheelComm();
     initGripperComm();
+
+    delay(300);  // Da tiempo a estabilizar UARTs
 }
 
 void loop() {
