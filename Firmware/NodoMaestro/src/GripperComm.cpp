@@ -29,7 +29,17 @@ void checkAckFromGripper() {
 
                 if (ackType == 'K') {
                     SerialGUI.print("OK [Gripper]: ");
-                    SerialGUI.println(ackValue);
+                    switch (ackValue) {
+                        case STATE_GRIPPER_RELEASE: SerialGUI.println("Gripper liberado."); break;
+                        case STATE_GRIPPER_CATCH: SerialGUI.println("Gripper capturado."); break;
+                        case STATE_POS_Y1: SerialGUI.println("Posición Y1 alcanzada."); break;
+                        case STATE_POS_Y2: SerialGUI.println("Posición Y2 alcanzada."); break;
+                        case STATE_POS_Y3: SerialGUI.println("Posición Y3 alcanzada."); break;
+                        case STATE_EMERGENCY_STOP: SerialGUI.println("Parada de emergencia ejecutada."); break;
+                        default:
+                            SerialGUI.print("Estado recibido = ");
+                            SerialGUI.println(ackValue);
+                    }
                 } else if (ackType == 'E') {
                     SerialGUI.print("ERROR [Gripper]: Código = ");
                     SerialGUI.println(ackValue);
