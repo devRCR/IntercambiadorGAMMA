@@ -10,6 +10,8 @@
 static String guiInput = "";
 static char guiCommand = 0;
 static int guiValue = -1;
+static bool bootDiscard = true;
+
 
 // ===========================================
 // FUNCIONES AUXILIARES
@@ -29,34 +31,42 @@ bool isNumeric(const String& s) {
 // ===========================================
 void initGUI() {
     SerialGUI.begin(115200);
+    while (SerialGUI.available()) SerialGUI.read();  // LIMPIA cualquier dato previo
     SerialGUI.println("Interfaz GUI lista.");
 }
+
 
 // ===========================================
 // RECEPCIÓN Y PARSEO DE COMANDOS DESDE GUI
 // ===========================================
+
+bool isValidCommandChar(char c) {
+    return c == CMD_SHIELD || c == CMD_PLATE || c == CMD_SAMPLE ||
+           c == CMD_GRIPPER || c == CMD_POSITION || c == CMD_STOP;
+}
+
 bool checkCommandFromGUI() {
     while (SerialGUI.available() > 0) {
         char c = SerialGUI.read();
+
         if (c == '\r') {
-            if (guiInput.length() > 1) {
+            if (guiInput.length() > 1 && isValidCommandChar(guiInput.charAt(0))) {
                 String rawValue = guiInput.substring(1);
                 if (isNumeric(rawValue)) {
                     guiCommand = guiInput.charAt(0);
                     guiValue = rawValue.toInt();
-                } else {
-                    guiCommand = 0;
-                    guiValue = -1;
+                    guiInput = "";
+                    bootDiscard = false;  // Se procesó un comando válido
+                    return true;
                 }
-                guiInput = "";
-                return true;
-            } else {
-                guiInput = "";
             }
+
+            guiInput = "";  // Limpia basura
         } else if (c != '\n') {
             guiInput += c;
         }
     }
+
     return false;
 }
 
@@ -64,8 +74,8 @@ bool checkCommandFromGUI() {
 // PROCESAMIENTO DEL COMANDO VALIDADO
 // ===========================================
 void handleGUICommand() {
-    if (guiCommand == 0 || guiValue < 0) {
-        SerialGUI.println("ERROR: Comando no válido o valor no numérico.");
+    if (bootDiscard || guiCommand == 0 || guiValue < 0) {
+        // No imprimir error durante fase de limpieza inicial
         return;
     }
 
