@@ -34,7 +34,7 @@ void checkAckFromWheel() {
                         case STATE_PLATE_UP:     SerialGUI.println("OK: Mesa en posición superior."); break;
                         case STATE_PLATE_DOWN:   SerialGUI.println("OK: Mesa en posición inferior."); break;
                         case STATE_SAMPLE_NEXT:  SerialGUI.println("OK: Muestra siguiente posicionada."); break;
-                        case STATE_SAMPLE_CYCLE: SerialGUI.println("OK: Ciclo de reposicionamiento completado."); break;
+                        case STATE_SAMPLE_CYCLE: SerialGUI.println("OK: Muestra previa posicionada."); break;
                         default:
                             SerialGUI.print("OK: Estado recibido = ");
                             SerialGUI.println(ackValue);
