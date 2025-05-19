@@ -17,7 +17,7 @@
 #define VAL_PLATE_UP        VAL_OPEN
 #define VAL_PLATE_DOWN      VAL_CLOSE
 
-#define VAL_SAMPLE_CYCLE    VAL_OPEN
+#define VAL_SAMPLE_PREV     VAL_OPEN
 #define VAL_SAMPLE_NEXT     VAL_CLOSE
 
 #endif
