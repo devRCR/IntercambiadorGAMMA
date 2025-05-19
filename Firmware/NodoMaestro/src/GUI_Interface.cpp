@@ -7,6 +7,11 @@ static String guiInput = "";
 static char guiCommand = 0;
 static int guiValue = -1;
 
+void initGUI() {
+    SerialGUI.begin(115200);
+    SerialGUI.println("Interfaz GUI lista.");
+}
+
 // ---------------------------------------------
 // Función auxiliar para verificar si es numérico
 // ---------------------------------------------
