@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "GUI_Interface.h"
 #include "WheelComm.h"
 #include "GripperComm.h"
