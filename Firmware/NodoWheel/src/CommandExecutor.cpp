@@ -48,7 +48,7 @@ void executeCommand(char cmd, int val) {
 
         case CMD_SAMPLE:
             if (val == VAL_SAMPLE_PREV) {
-                Serial.println(">> Retrocede muestra");
+                Serial.println(">> Retroceder muestra");
                 sendACK(STATE_SAMPLE_PREV);
             } else if (val == VAL_SAMPLE_NEXT) {
                 Serial.println(">> Avanzar muestra");
