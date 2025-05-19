@@ -17,6 +17,11 @@ void sendERR(int code) {
 }
 
 void executeCommand(char cmd, int val) {
+    if (cmd == 0 || val < 0) {
+        Serial.println("ERROR: Comando no válido o valor no numérico.");
+        sendERR(STATE_UNKNOWN);
+        return;
+    }
     Serial.print("Recibido → ");
     Serial.print(cmd);
     Serial.println(val);
