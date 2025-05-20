@@ -89,7 +89,7 @@ void handleGUICommand() {
     if (
         (guiCommand == CMD_SHIELD && (guiValue == VAL_SHIELD_OPEN || guiValue == VAL_SHIELD_CLOSE)) ||
         (guiCommand == CMD_PLATE  && (guiValue == VAL_PLATE_UP    || guiValue == VAL_PLATE_DOWN)) ||
-        (guiCommand == CMD_SAMPLE && (guiValue == VAL_SAMPLE_CYCLE || guiValue == VAL_SAMPLE_NEXT))
+        (guiCommand == CMD_SAMPLE && (guiValue == VAL_SAMPLE_PREV || guiValue == VAL_SAMPLE_NEXT))
     ) {
         sendToWheel(guiCommand, guiValue);
         SerialGUI.println(">> Command forwarded to Wheel Node");
