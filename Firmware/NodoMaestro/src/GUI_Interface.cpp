@@ -32,7 +32,7 @@ bool isNumeric(const String& s) {
 void initGUI() {
     SerialGUI.begin(115200);
     while (SerialGUI.available()) SerialGUI.read();  // LIMPIA cualquier dato previo
-    SerialGUI.println("Interfaz GUI lista.");
+    SerialGUI.println("GUI interface ready.");
 }
 
 
@@ -79,7 +79,7 @@ void handleGUICommand() {
         return;
     }
 
-    SerialGUI.print("Recibido: ");
+    SerialGUI.print("Received: ");
     SerialGUI.print(guiCommand);
     SerialGUI.println(guiValue);
 
@@ -88,11 +88,11 @@ void handleGUICommand() {
     // ---------------------------
     if (
         (guiCommand == CMD_SHIELD && (guiValue == VAL_SHIELD_OPEN || guiValue == VAL_SHIELD_CLOSE)) ||
-        (guiCommand == CMD_PLATE  && (guiValue == VAL_PLATE_UP     || guiValue == VAL_PLATE_DOWN)) ||
+        (guiCommand == CMD_PLATE  && (guiValue == VAL_PLATE_UP    || guiValue == VAL_PLATE_DOWN)) ||
         (guiCommand == CMD_SAMPLE && (guiValue == VAL_SAMPLE_CYCLE || guiValue == VAL_SAMPLE_NEXT))
     ) {
         sendToWheel(guiCommand, guiValue);
-        SerialGUI.println(">> Comando reenviado al Nodo Wheel");
+        SerialGUI.println(">> Command forwarded to Wheel Node");
     }
 
     // ---------------------------
@@ -104,13 +104,13 @@ void handleGUICommand() {
         (guiCommand == CMD_STOP     && guiValue == VAL_STOP)
     ) {
         sendToGripper(guiCommand, guiValue);
-        SerialGUI.println(">> Comando reenviado al Nodo Gripper");
+        SerialGUI.println(">> Command forwarded to Gripper Node");
     }
 
     // ---------------------------
     // Comando inválido
     // ---------------------------
     else {
-        SerialGUI.println("ERROR: Comando no reconocido o valor inválido.");
+        SerialGUI.println("ERROR: Unrecognized command or invalid value.");
     }
 }

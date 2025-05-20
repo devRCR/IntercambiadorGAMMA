@@ -9,8 +9,8 @@ static int ackValue = 0;
 
 void initGripperComm() {
     SerialGripper.begin(9600);
-    while (SerialGripper.available()) SerialGripper.read();  // Limpia residuos
-    SerialGUI.println("Comunicación con GripperNode iniciada.");
+    while (SerialGripper.available()) SerialGripper.read();  // Clear buffer
+    SerialGUI.println("Communication with GripperNode initiated.");
 }
 
 void sendToGripper(char cmd, int val) {
@@ -31,18 +31,18 @@ void checkAckFromGripper() {
                 if (ackType == 'K') {
                     SerialGUI.print("OK [Gripper]: ");
                     switch (ackValue) {
-                        case STATE_GRIPPER_RELEASE: SerialGUI.println("Gripper liberado."); break;
-                        case STATE_GRIPPER_CATCH: SerialGUI.println("Gripper capturado."); break;
-                        case STATE_POS_Y1: SerialGUI.println("Posición Y1 alcanzada."); break;
-                        case STATE_POS_Y2: SerialGUI.println("Posición Y2 alcanzada."); break;
-                        case STATE_POS_Y3: SerialGUI.println("Posición Y3 alcanzada."); break;
-                        case STATE_EMERGENCY_STOP: SerialGUI.println("Parada de emergencia ejecutada."); break;
+                        case STATE_GRIPPER_RELEASE: SerialGUI.println("Gripper released."); break;
+                        case STATE_GRIPPER_CATCH: SerialGUI.println("Gripper caught."); break;
+                        case STATE_POS_Y1: SerialGUI.println("Position Y1 reached."); break;
+                        case STATE_POS_Y2: SerialGUI.println("Position Y2 reached."); break;
+                        case STATE_POS_Y3: SerialGUI.println("Position Y3 reached."); break;
+                        case STATE_EMERGENCY_STOP: SerialGUI.println("Emergency stop executed."); break;
                         default:
-                            SerialGUI.print("Estado recibido = ");
+                            SerialGUI.print("State received = ");
                             SerialGUI.println(ackValue);
                     }
                 } else if (ackType == 'E') {
-                    SerialGUI.print("ERROR [GripperNode]: Código = ");
+                    SerialGUI.print("ERROR [GripperNode]: Code = ");
                     SerialGUI.println(ackValue);
                 }
             }
