@@ -52,7 +52,7 @@ void checkButtonsAndSendCommands() {
                     sendToGripper(buttons[i].command, buttons[i].value);
                     break;
                 case ButtonAction::NINGUNO:
-                    SerialGUI.println("→ Secuencia automática: aún no implementada.");
+                    SerialGUI.println(">> Secuencia automática: aún no implementada.");
                     break;
             }
         }

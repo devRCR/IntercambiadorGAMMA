@@ -23,7 +23,7 @@ void executeCommand(char cmd, int val) {
         return;
     }
 
-    Serial.print("Recibido → ");
+    Serial.print("Recibido: ");
     Serial.print(cmd);
     Serial.println(val);
 

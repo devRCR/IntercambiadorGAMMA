@@ -42,7 +42,7 @@ void checkAckFromGripper() {
                             SerialGUI.println(ackValue);
                     }
                 } else if (ackType == 'E') {
-                    SerialGUI.print("ERROR [Gripper]: Código = ");
+                    SerialGUI.print("ERROR [GripperNode]: Código = ");
                     SerialGUI.println(ackValue);
                 }
             }

@@ -92,7 +92,7 @@ void handleGUICommand() {
         (guiCommand == CMD_SAMPLE && (guiValue == VAL_SAMPLE_CYCLE || guiValue == VAL_SAMPLE_NEXT))
     ) {
         sendToWheel(guiCommand, guiValue);
-        SerialGUI.println("→ Comando reenviado al Nodo Wheel");
+        SerialGUI.println(">> Comando reenviado al Nodo Wheel");
     }
 
     // ---------------------------
@@ -104,7 +104,7 @@ void handleGUICommand() {
         (guiCommand == CMD_STOP     && guiValue == VAL_STOP)
     ) {
         sendToGripper(guiCommand, guiValue);
-        SerialGUI.println("→ Comando reenviado al Nodo Gripper");
+        SerialGUI.println(">> Comando reenviado al Nodo Gripper");
     }
 
     // ---------------------------

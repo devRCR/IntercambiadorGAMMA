@@ -41,7 +41,7 @@ void checkAckFromWheel() {
                             SerialGUI.println(ackValue);
                     }
                 } else if (ackType == 'E') {
-                    SerialGUI.print("ERROR: Nodo Wheel reportó falla, Código = ");
+                    SerialGUI.print("ERROR [WheelNode]: Código =  ");
                     SerialGUI.println(ackValue);
                 }
             }
