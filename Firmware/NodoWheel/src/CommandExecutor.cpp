@@ -50,6 +50,16 @@ void executeCommand(char cmd, int val) {
                 sendERR(STATE_UNKNOWN);
             }
             break;
+            
+        case CMD_STOP:
+    if (val == VAL_STOP) {
+        Serial.println(">> Parada de emergencia (ACK sin acción).");
+        sendACK(STATE_EMERGENCY_STOP);
+    } else {
+        sendERR(STATE_UNKNOWN);
+    }
+    break;
+
 
         case CMD_SAMPLE:
             if (val == VAL_SAMPLE_PREV) {

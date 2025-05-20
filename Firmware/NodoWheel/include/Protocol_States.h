@@ -8,5 +8,7 @@
 #define STATE_SAMPLE_NEXT     100
 #define STATE_SAMPLE_PREV     150
 #define STATE_UNKNOWN           0
+#define STATE_EMERGENCY_STOP 499
+
 
 #endif

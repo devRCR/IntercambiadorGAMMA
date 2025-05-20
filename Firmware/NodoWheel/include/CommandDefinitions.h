@@ -5,10 +5,12 @@
 #define CMD_SHIELD    'H'
 #define CMD_PLATE     'P'
 #define CMD_SAMPLE    'S'
+#define CMD_STOP       'T'
 
 // Valores binarios estándar
 #define VAL_OPEN       0
 #define VAL_CLOSE      1
+#define VAL_STOP        0
 
 // Alias legibles
 #define VAL_SHIELD_OPEN     VAL_OPEN
