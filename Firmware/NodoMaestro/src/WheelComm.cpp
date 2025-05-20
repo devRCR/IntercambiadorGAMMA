@@ -57,7 +57,7 @@ void checkAckFromWheel() {
                         case STATE_PLATE_UP:     SerialGUI.println("Plate up."); break;
                         case STATE_PLATE_DOWN:   SerialGUI.println("Plate down."); break;
                         case STATE_SAMPLE_NEXT:  SerialGUI.println("Sample advanced."); break;
-                        case STATE_SAMPLE_CYCLE: SerialGUI.println("Sample reset."); break;
+                        case STATE_SAMPLE_PREV: SerialGUI.println("Sample reset."); break;
                         default:
                             SerialGUI.print("ACK code = ");
                             SerialGUI.println(ackValue);

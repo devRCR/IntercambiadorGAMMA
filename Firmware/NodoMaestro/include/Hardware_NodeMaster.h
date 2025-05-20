@@ -7,7 +7,7 @@
 
 // Botones para Rueda de muestras (Wheel)
 #define PIN_BTN_SAMPLE_NEXT       30
-#define PIN_BTN_SAMPLE_CYCLE      31
+#define PIN_BTN_SAMPLE_PREV      31
 
 // Botones para Mesa niveladora (Wheel)
 #define PIN_BTN_PLATE_DOWN        32

@@ -28,7 +28,7 @@
 #define VAL_PLATE_DOWN      VAL_CLOSE
 
 // Acciones de la rueda de muestras
-#define VAL_SAMPLE_CYCLE    VAL_OPEN
+#define VAL_SAMPLE_PREV    VAL_OPEN
 #define VAL_SAMPLE_NEXT     VAL_CLOSE
 
 // ===========================================
