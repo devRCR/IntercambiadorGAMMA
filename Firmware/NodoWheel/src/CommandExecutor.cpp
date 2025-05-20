@@ -22,7 +22,7 @@ void executeCommand(char cmd, int val) {
         sendERR(STATE_UNKNOWN);
         return;
     }
-    Serial.print("Recibido → ");
+    Serial.print("Recibido: ");
     Serial.print(cmd);
     Serial.println(val);
 
