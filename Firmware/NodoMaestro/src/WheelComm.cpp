@@ -6,11 +6,32 @@
 static String wheelInput = "";
 static char ackType = 0;
 static int ackValue = 0;
+bool wheelNodeActive = false;
 
 void initWheelComm() {
     SerialWheel.begin(9600);
-    while (SerialWheel.available()) SerialWheel.read();  // Clear buffer
-    SerialGUI.println("Communication with WheelNode initiated.");
+    while (SerialWheel.available()) SerialWheel.read(); // Limpia buffer de entrada
+
+    // Enviar comando de verificación (T0) al iniciar
+    sendToWheel(CMD_STOP, VAL_STOP);
+    unsigned long t_start = millis();
+    wheelNodeActive = false;
+
+    // Esperar respuesta por hasta 300 ms
+    while (millis() - t_start < 300) {
+        if (SerialWheel.available()) {
+            checkAckFromWheel();      // Procesa respuesta
+            wheelNodeActive = true;   // Nodo respondió
+            break;
+        }
+    }
+
+    // Mensaje de estado
+    if (wheelNodeActive) {
+        SerialGUI.println("WheelNode communication verified.");
+    } else {
+        SerialGUI.println("WARNING: No response from WheelNode.");
+    }
 }
 
 void sendToWheel(char cmd, int val) {
@@ -29,19 +50,20 @@ void checkAckFromWheel() {
                 wheelInput = "";
 
                 if (ackType == 'K') {
+                    SerialGUI.print("OK [Wheel]: ");
                     switch (ackValue) {
-                        case STATE_SHIELD_CLOSE: SerialGUI.println("OK: Shield closed."); break;
-                        case STATE_SHIELD_OPEN:  SerialGUI.println("OK: Shield opened."); break;
-                        case STATE_PLATE_UP:     SerialGUI.println("OK: Plate in upper position."); break;
-                        case STATE_PLATE_DOWN:   SerialGUI.println("OK: Plate in lower position."); break;
-                        case STATE_SAMPLE_NEXT:  SerialGUI.println("OK: Next sample positioned."); break;
-                        case STATE_SAMPLE_CYCLE: SerialGUI.println("OK: Previous sample positioned."); break;
+                        case STATE_SHIELD_CLOSE: SerialGUI.println("Shield closed."); break;
+                        case STATE_SHIELD_OPEN:  SerialGUI.println("Shield open."); break;
+                        case STATE_PLATE_UP:     SerialGUI.println("Plate up."); break;
+                        case STATE_PLATE_DOWN:   SerialGUI.println("Plate down."); break;
+                        case STATE_SAMPLE_NEXT:  SerialGUI.println("Sample advanced."); break;
+                        case STATE_SAMPLE_CYCLE: SerialGUI.println("Sample reset."); break;
                         default:
-                            SerialGUI.print("OK: State received = ");
+                            SerialGUI.print("ACK code = ");
                             SerialGUI.println(ackValue);
                     }
                 } else if (ackType == 'E') {
-                    SerialGUI.print("ERROR [WheelNode]: Code = ");
+                    SerialGUI.print("ERROR [Wheel]: Code = ");
                     SerialGUI.println(ackValue);
                 }
             }
@@ -50,3 +72,4 @@ void checkAckFromWheel() {
         }
     }
 }
+// Fin del archivo WheelComm.cpp
