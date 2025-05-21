@@ -3,6 +3,6 @@
 
 void initWheelComm();
 void sendToWheel(char cmd, int val);
-void checkAckFromWheel();
+bool checkAckFromWheel();
 
 #endif

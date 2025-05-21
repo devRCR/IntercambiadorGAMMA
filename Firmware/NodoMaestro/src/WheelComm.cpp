@@ -18,13 +18,14 @@ void initWheelComm() {
     wheelNodeActive = false;
 
     // Esperar respuesta por hasta 300 ms
-    while (millis() - t_start < 300) {
-        if (SerialWheel.available()) {
-            checkAckFromWheel();      // Procesa respuesta
-            wheelNodeActive = true;   // Nodo respondió
+while (millis() - t_start < 300) {
+    if (SerialWheel.available()) {
+        if (checkAckFromWheel()) {
+            wheelNodeActive = true;
             break;
         }
     }
+}
 
     // Mensaje de estado
     if (wheelNodeActive) {
@@ -40,7 +41,7 @@ void sendToWheel(char cmd, int val) {
     SerialWheel.print('\r');
 }
 
-void checkAckFromWheel() {
+bool checkAckFromWheel() {
     while (SerialWheel.available() > 0) {
         char c = SerialWheel.read();
         if (c == '\r') {
@@ -57,19 +58,24 @@ void checkAckFromWheel() {
                         case STATE_PLATE_UP:     SerialGUI.println("Plate up."); break;
                         case STATE_PLATE_DOWN:   SerialGUI.println("Plate down."); break;
                         case STATE_SAMPLE_NEXT:  SerialGUI.println("Sample advanced."); break;
-                        case STATE_SAMPLE_PREV: SerialGUI.println("Sample reset."); break;
+                        case STATE_SAMPLE_PREV:  SerialGUI.println("Sample reset."); break;
+                        case STATE_EMERGENCY_STOP: SerialGUI.println("Emergency stop acknowledged."); break;
                         default:
                             SerialGUI.print("ACK code = ");
                             SerialGUI.println(ackValue);
                     }
+                    return true;
                 } else if (ackType == 'E') {
                     SerialGUI.print("ERROR [Wheel]: Code = ");
                     SerialGUI.println(ackValue);
+                    return false;
                 }
             }
         } else if (c != '\n') {
             wheelInput += c;
         }
     }
+    return false;
 }
+
 // Fin del archivo WheelComm.cpp
