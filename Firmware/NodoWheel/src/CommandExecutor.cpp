@@ -4,6 +4,10 @@
 #include "CommandDefinitions.h"
 #include "Protocol_States.h"
 
+#include "PlateControl.h"
+#include "ShieldControl.h"
+#include "SampleControl.h"
+
 // --------------------------------------------------
 // Envía ACK con código de estado exitoso
 // --------------------------------------------------
@@ -23,72 +27,54 @@ void sendERR(int code) {
 }
 
 // --------------------------------------------------
-// Procesa el comando recibido desde el maestro
+// Procesa el comando recibido desde cualquier fuente
 // --------------------------------------------------
 void executeCommand(char cmd, int val) {
-    // Validación básica de datos
+    // Validación básica
     if (cmd == 0 || val < 0) {
         Serial.println("ERROR: Invalid command or non-numeric value.");
         sendERR(STATE_UNKNOWN);
         return;
     }
 
-    Serial.print("Received → ");
+    Serial.print("Received : ");
     Serial.print(cmd);
     Serial.println(val);
 
     switch (cmd) {
-
-        // Comando de control de blindaje
         case CMD_SHIELD:
-            if (val == VAL_SHIELD_OPEN) {
-                Serial.println(">> Open shield");
-                sendACK(STATE_SHIELD_OPEN);
-            } else if (val == VAL_SHIELD_CLOSE) {
-                Serial.println(">> Close shield");
-                sendACK(STATE_SHIELD_CLOSE);
+            if (val == VAL_SHIELD_OPEN || val == VAL_SHIELD_CLOSE) {
+                processShieldCommand(val, true);  // true = responder al maestro
             } else {
                 sendERR(STATE_UNKNOWN);
             }
             break;
 
-        // Comando de control de mesa niveladora
         case CMD_PLATE:
-            if (val == VAL_PLATE_UP) {
-                Serial.println(">> Raise plate");
-                sendACK(STATE_PLATE_UP);
-            } else if (val == VAL_PLATE_DOWN) {
-                Serial.println(">> Lower plate");
-                sendACK(STATE_PLATE_DOWN);
+            if (val == VAL_PLATE_UP || val == VAL_PLATE_DOWN) {
+                processPlateCommand(val, true);
             } else {
                 sendERR(STATE_UNKNOWN);
             }
             break;
 
-        // Comando de control de rueda de muestras
         case CMD_SAMPLE:
-            if (val == VAL_SAMPLE_PREV) {
-                Serial.println(">> Reset sample position");
-                sendACK(STATE_SAMPLE_CYCLE);
-            } else if (val == VAL_SAMPLE_NEXT) {
-                Serial.println(">> Advance to next sample");
-                sendACK(STATE_SAMPLE_NEXT);
+            if (val == VAL_SAMPLE_PREV || val == VAL_SAMPLE_NEXT) {
+                processSampleCommand(val, true);
             } else {
                 sendERR(STATE_UNKNOWN);
             }
             break;
 
-        // Comando de parada de emergencia (sin acción física)
         case CMD_STOP:
             if (val == VAL_STOP) {
-                Serial.println(">> Emergency stop received (no action)");
-                sendACK(STATE_EMERGENCY_STOP);
+                Serial.println(">> Emergency stop received.");
+                sendACK(STATE_EMERGENCY_STOP);  // Respuesta inmediata permitida
             } else {
                 sendERR(STATE_UNKNOWN);
             }
             break;
 
-        // Comando desconocido
         default:
             sendERR(STATE_UNKNOWN);
     }
