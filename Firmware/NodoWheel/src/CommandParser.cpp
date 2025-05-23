@@ -99,3 +99,4 @@ void clearParsedCommand() {
     parsedValue = -1;
     parsedSource = SOURCE_NONE;
 }
+// Función para imprimir el comando analizado (para depuración)

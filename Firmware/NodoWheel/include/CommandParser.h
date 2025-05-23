@@ -21,3 +21,4 @@ CommandSource getParsedSource();
 void clearParsedCommand(); // Reinicia comando
 
 #endif
+// Fin de la definición de la clase

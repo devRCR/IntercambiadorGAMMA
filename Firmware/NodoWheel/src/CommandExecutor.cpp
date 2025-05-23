@@ -69,7 +69,7 @@ void executeCommand(char cmd, int val) {
         case CMD_SAMPLE:
             if (val == VAL_SAMPLE_PREV) {
                 Serial.println(">> Reset sample position");
-                sendACK(STATE_SAMPLE_PREV);
+                sendACK(STATE_SAMPLE_CYCLE);
             } else if (val == VAL_SAMPLE_NEXT) {
                 Serial.println(">> Advance to next sample");
                 sendACK(STATE_SAMPLE_NEXT);
