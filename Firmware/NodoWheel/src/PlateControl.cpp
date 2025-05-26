@@ -12,7 +12,7 @@
 
 static uint8_t RUNNING = 0;                  // 0: inactivo, 1: bajando, 2: subiendo
 static unsigned long startTime = 0;
-static const unsigned long TIMEOUT_MS = 15000;
+static const unsigned long TIMEOUT_MS = 10000;
 static bool currentReplyToMaster = false;    // Solo si comando proviene del maestro
 
 // ------------------------------------------------------

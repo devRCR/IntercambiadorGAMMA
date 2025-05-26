@@ -12,7 +12,7 @@
 
 static uint8_t SHIELD_STATE = 0;               // 0: inactivo, 1: abriendo, 2: cerrando
 static unsigned long shieldStartTime = 0;
-static const unsigned long SHIELD_TIMEOUT_MS = 5000;
+static const unsigned long SHIELD_TIMEOUT_MS = 10000;
 static bool currentReplyToMaster = false;
 
 // -----------------------------------------------------------

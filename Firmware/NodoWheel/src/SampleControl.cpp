@@ -9,7 +9,7 @@
 
 static bool advancing = false;
 static unsigned long advanceStartTime = 0;
-static const unsigned long ADVANCE_TIMEOUT_MS = 5000;
+static const unsigned long ADVANCE_TIMEOUT_MS = 10000;
 static int advanceMode = -1;  // 0: ciclo base (S0), 1: siguiente muestra (S1)
 static bool replyToMaster = false;
 
