@@ -19,32 +19,33 @@
 // ----------------------------
 // Relevadores de control (Outputs)
 // ----------------------------
-#define RLY_SAMPLE_NEXT   31  // Avance de muestra
-#define RLY_DOOR_OPEN     32  // Abrir blindaje
-#define RLY_DOOR_CLOSE    33  // Cerrar blindaje
+#define RLY_DOOR_OPEN     46  // Abrir blindaje
+#define RLY_DOOR_CLOSE    47  // Cerrar blindaje
+#define RLY_SAMPLE_NEXT   48  // Avance de muestra
 
 // ----------------------------
 // Motor de la mesa (Outputs)
 // ----------------------------
-#define DRIVER_IN1   24
-#define DRIVER_IN2   25
-#define MOTOR_PWM    9
+#define DRIVER_IN1   A1
+#define DRIVER_IN2   A0
+#define MOTOR_PWM    2
 
 // ----------------------------
 // Sensores de posición (Inputs)
 // ----------------------------
-#define SENSOR_BOTTOM1   22
-#define SENSOR_BOTTOM2   23
-#define SENSOR_TOP1      26
-#define SENSOR_TOP2      27
-#define SENS_ORANGE      28   // Sensor de avance de muestra
-#define SENS_BLUE        29   // Blindaje cerrado
-#define SENS_GREEN       30   // Blindaje abierto
+#define SENSOR_TOP1      40
+#define SENSOR_TOP2      41
+#define SENSOR_BOTTOM1   42
+#define SENSOR_BOTTOM2   43
+#define SENS_ORANGE      7   // Sensor de avance de muestra
+#define SENS_VIOLET      8
+#define SENS_GREEN       9   // Blindaje abierto
+#define SENS_BLUE        10  // Blindaje cerrado
 
 // ----------------------------
 // Alarma sonora
 // ----------------------------
-#define BUZZER        8
+#define BUZZER           A2
 
 // ----------------------------
 // Configuración de pines (debe llamarse desde setup si se desea modularizar)
