@@ -24,8 +24,8 @@
 
 ## Notas técnicas
 
-- **ACK (K<estado>)** se emite únicamente al finalizar con éxito el proceso físico (confirmado por sensores).
-- **ERROR (E<code>)** se emite si falla una condición de seguridad o se excede el timeout.
+- **ACK (K\<estado\>)** se emite únicamente al finalizar con éxito el proceso físico (confirmado por sensores).
+- **ERROR (E\<code\>)** se emite si falla una condición de seguridad o se excede el timeout.
 - **Si el sistema ya está en el estado solicitado (ej. mesa arriba al recibir P0), igualmente se emite el ACK correspondiente.**
 
 ---
