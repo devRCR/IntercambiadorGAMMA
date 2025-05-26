@@ -1,3 +1,23 @@
+/**
+ * @file main.cpp
+ * @brief Main entry point for the NodoWheel firmware.
+ *
+ * This file initializes the hardware and manages the main control loop for the Wheel Node.
+ * It handles communication with the master node and local PC, processes incoming commands,
+ * and updates the state of modular controllers for plate, shield, and sample mechanisms.
+ *
+ * Included Modules:
+ * - Hardware_NodeWheel: Hardware abstraction and pin configuration.
+ * - CommandParser: Parsing of incoming command strings.
+ * - CommandExecutor: Execution of parsed commands.
+ * - PlateControl: Control logic for plate movement.
+ * - ShieldControl: Control logic for shield mechanism.
+ * - SampleControl: Control logic for sample advancement.
+ *
+ * Main Functions:
+ * - setup(): Initializes serial communication, configures hardware pins, and prints a startup message.
+ * - loop(): Main control loop that checks for incoming commands and updates the state of all subsystems.
+ */
 #include <Arduino.h>
 
 // Encabezados del sistema
