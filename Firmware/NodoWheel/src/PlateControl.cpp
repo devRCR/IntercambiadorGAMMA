@@ -15,6 +15,10 @@ static unsigned long startTime = 0;
 static const unsigned long TIMEOUT_MS = 10000;
 static bool currentReplyToMaster = false;    // Solo si comando proviene del maestro
 
+// Define velocidades
+#define SPEED_HIGH  150
+#define SPEED_LOW   80
+
 // ------------------------------------------------------
 // Inicia el movimiento de la mesa niveladora
 // value = 0 (subir), 1 (bajar)
@@ -42,7 +46,7 @@ void processPlateCommand(int value, bool replyToMaster) {
         Serial.println("Starting plate down...");
         digitalWrite(DRIVER_IN1, LOW);
         digitalWrite(DRIVER_IN2, HIGH);
-        analogWrite(MOTOR_PWM, 150);
+        analogWrite(MOTOR_PWM, SPEED_HIGH); // Arranca rápido
         RUNNING = 1;
         startTime = millis();
 
@@ -60,7 +64,7 @@ void processPlateCommand(int value, bool replyToMaster) {
         Serial.println("Starting plate up...");
         digitalWrite(DRIVER_IN1, HIGH);
         digitalWrite(DRIVER_IN2, LOW);
-        analogWrite(MOTOR_PWM, 150);
+        analogWrite(MOTOR_PWM, SPEED_HIGH); // Arranca rápido
         RUNNING = 2;
         startTime = millis();
 
@@ -78,6 +82,11 @@ void updatePlateMovement() {
 
     // FSM: Bajar mesa
     if (RUNNING == 1) {
+        // Si se activa al menos un sensor de abajo, baja velocidad
+        if (digitalRead(SENSOR_BOTTOM1) || digitalRead(SENSOR_BOTTOM2)) {
+            analogWrite(MOTOR_PWM, SPEED_LOW);
+        }
+        // Si ambos sensores de abajo activos, detener
         if (digitalRead(SENSOR_BOTTOM1) && digitalRead(SENSOR_BOTTOM2)) {
             analogWrite(MOTOR_PWM, 0);
             RUNNING = 0;
@@ -93,6 +102,11 @@ void updatePlateMovement() {
 
     // FSM: Subir mesa
     else if (RUNNING == 2) {
+        // Si se activa al menos un sensor de arriba, baja velocidad
+        if (digitalRead(SENSOR_TOP1) || digitalRead(SENSOR_TOP2)) {
+            analogWrite(MOTOR_PWM, SPEED_LOW);
+        }
+        // Si ambos sensores de arriba activos, detener
         if (digitalRead(SENSOR_TOP1) && digitalRead(SENSOR_TOP2)) {
             analogWrite(MOTOR_PWM, 0);
             RUNNING = 0;
