@@ -47,19 +47,21 @@ void setup() {
 // Bucle principal de control
 // -----------------------------------------------
 void loop() {
-    // Serial.print("BOTTOM1: ");
-    // Serial.print(digitalRead(SENSOR_BOTTOM1));
-    // Serial.print("  BOTTOM2: ");
-    // Serial.print(digitalRead(SENSOR_BOTTOM2));
-    // Serial.print("  TOP1: ");
-    // Serial.print(digitalRead(SENSOR_TOP1));
-    // Serial.print("  TOP2: ");
-    // Serial.print(digitalRead(SENSOR_TOP2));
-    // Serial.print("  SHIELD OPENED: ");
-    // Serial.print(digitalRead(SENS_GREEN));
-    // Serial.print("  SHIELD CLOSED: ");
-    // Serial.println(digitalRead(SENS_BLUE));
-    // delay(500);
+    Serial.print("BOTTOM1: ");
+    Serial.print(digitalRead(SENSOR_BOTTOM1));
+    Serial.print("  BOTTOM2: ");
+    Serial.print(digitalRead(SENSOR_BOTTOM2));
+    Serial.print("  TOP1: ");
+    Serial.print(digitalRead(SENSOR_TOP1));
+    Serial.print("  TOP2: ");
+    Serial.print(digitalRead(SENSOR_TOP2));
+    Serial.print("  SHIELD OPENED: ");
+    Serial.print(digitalRead(SENS_GREEN));
+    Serial.print("  SHIELD CLOSED: ");
+    Serial.print(digitalRead(SENS_BLUE));
+    Serial.print("  NEXT SAMPLE: ");
+    Serial.println(digitalRead(SENS_ORANGE));
+    delay(500);
 
     // 1. Revisión de comandos desde Maestro o PC
     if (checkLineFromMaster() || checkLineFromLocal()) {

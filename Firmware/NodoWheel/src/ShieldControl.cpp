@@ -12,7 +12,7 @@
 
 static uint8_t SHIELD_STATE = 0;               // 0: inactivo, 1: abriendo, 2: cerrando
 static unsigned long shieldStartTime = 0;
-static const unsigned long SHIELD_TIMEOUT_MS = 10000;
+static const unsigned long SHIELD_TIMEOUT_MS = 25000;
 static bool currentReplyToMaster = false;
 
 // -----------------------------------------------------------
@@ -21,18 +21,39 @@ static bool currentReplyToMaster = false;
 // replyToMaster = true → se responderá con ACK/ERROR al maestro
 // -----------------------------------------------------------
 void processShieldCommand(int value, bool replyToMaster) {
-    // Verificar que la mesa esté abajo
-    if (!(digitalRead(SENSOR_BOTTOM1) && digitalRead(SENSOR_BOTTOM2))) {
-        Serial.println("Shield blocked: plate not down.");
-        if (replyToMaster) {
-            SerialNodeMaster.print('E');
-            SerialNodeMaster.print(2);  // Código de seguridad violada
+    currentReplyToMaster = replyToMaster;
+
+    // Si el blindaje ya está en el estado solicitado, responder inmediatamente con ACK
+    if (value == SHIELD_OPEN && digitalRead(SENS_GREEN)) {
+        Serial.println("Shield already open.");
+        if (currentReplyToMaster) {
+            SerialNodeMaster.print('K');
+            SerialNodeMaster.print(STATE_SHIELD_OPEN);
+            SerialNodeMaster.print('\r');
+        }
+        return;
+    }
+    if (value == SHIELD_CLOSE && digitalRead(SENS_BLUE)) {
+        Serial.println("Shield already closed.");
+        if (currentReplyToMaster) {
+            SerialNodeMaster.print('K');
+            SerialNodeMaster.print(STATE_SHIELD_CLOSE);
             SerialNodeMaster.print('\r');
         }
         return;
     }
 
-    currentReplyToMaster = replyToMaster;
+    // Condición de seguridad: la mesa debe estar abajo para operar el blindaje
+    if (!(digitalRead(SENSOR_BOTTOM1) && digitalRead(SENSOR_BOTTOM2))) {
+        Serial.println("Safety violation: plate is not down.");
+        if (currentReplyToMaster) {
+            SerialNodeMaster.print('E');
+            SerialNodeMaster.print(2);  // Código de error: condición de seguridad
+            SerialNodeMaster.print('\r');
+        }
+        return;
+    }
+
     shieldStartTime = millis();
 
     if (value == SHIELD_OPEN) {
@@ -55,13 +76,12 @@ void processShieldCommand(int value, bool replyToMaster) {
 void updateShieldAction() {
     if (SHIELD_STATE == 0) return;
 
-    // FSM: Apertura
+    // FSM: apertura
     if (SHIELD_STATE == 1) {
         if (digitalRead(SENS_GREEN)) {
             digitalWrite(RLY_DOOR_OPEN, LOW);
             SHIELD_STATE = 0;
-            Serial.println("Shield opened.");
-
+            Serial.println("Shield fully opened.");
             if (currentReplyToMaster) {
                 SerialNodeMaster.print('K');
                 SerialNodeMaster.print(STATE_SHIELD_OPEN);
@@ -71,13 +91,12 @@ void updateShieldAction() {
         }
     }
 
-    // FSM: Cierre
+    // FSM: cierre
     else if (SHIELD_STATE == 2) {
         if (digitalRead(SENS_BLUE)) {
             digitalWrite(RLY_DOOR_CLOSE, LOW);
             SHIELD_STATE = 0;
-            Serial.println("Shield closed.");
-
+            Serial.println("Shield fully closed.");
             if (currentReplyToMaster) {
                 SerialNodeMaster.print('K');
                 SerialNodeMaster.print(STATE_SHIELD_CLOSE);
@@ -92,13 +111,11 @@ void updateShieldAction() {
         digitalWrite(RLY_DOOR_OPEN, LOW);
         digitalWrite(RLY_DOOR_CLOSE, LOW);
         SHIELD_STATE = 0;
-        Serial.println("Shield action timeout.");
-
+        Serial.println("Shield movement timeout.");
         if (currentReplyToMaster) {
             SerialNodeMaster.print('E');
-            SerialNodeMaster.print(3);  // Código de error: timeout
+            SerialNodeMaster.print(6);  // Código de error: timeout en blindaje
             SerialNodeMaster.print('\r');
-            Serial.println(">> ERROR sent: timeout");
         }
     }
 }
