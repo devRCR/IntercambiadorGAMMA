@@ -37,7 +37,7 @@ void processShieldCommand(int value, bool replyToMaster) {
         Serial.println("Shield already closed.");
         if (currentReplyToMaster) {
             SerialNodeMaster.print('K');
-            SerialNodeMaster.print(STATE_SHIELD_CLOSE);
+            SerialNodeMaster.print(STATE_SHIELD_CLOSED);
             SerialNodeMaster.print('\r');
         }
         return;
@@ -99,7 +99,7 @@ void updateShieldAction() {
             Serial.println("Shield fully closed.");
             if (currentReplyToMaster) {
                 SerialNodeMaster.print('K');
-                SerialNodeMaster.print(STATE_SHIELD_CLOSE);
+                SerialNodeMaster.print(STATE_SHIELD_CLOSED);
                 SerialNodeMaster.print('\r');
                 Serial.println(">> ACK sent: STATE_SHIELD_CLOSE");
             }
