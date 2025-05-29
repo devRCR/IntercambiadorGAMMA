@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "GUI_Interface.h"
 #include "Protocol_Definitions.h"
+#include "Hardware_NodeMaster.h"
 #include "WheelComm.h"
 #include "GripperComm.h"
 
@@ -11,7 +12,6 @@ static String guiInput = "";
 static char guiCommand = 0;
 static int guiValue = -1;
 static bool bootDiscard = true;
-
 
 // ===========================================
 // FUNCIONES AUXILIARES
@@ -35,21 +35,20 @@ void initGUI() {
     SerialGUI.println("GUI interface ready.");
 }
 
-
 // ===========================================
 // RECEPCIÓN Y PARSEO DE COMANDOS DESDE GUI
 // ===========================================
 
 bool isValidCommandChar(char c) {
-    return c == CMD_SHIELD || c == CMD_PLATE || c == CMD_SAMPLE ||
-           c == CMD_GRIPPER || c == CMD_POSITION || c == CMD_STOP;
+    return c == CMD_SHIELD || c == CMD_PLATE || c == CMD_SAMPLE_WHEEL ||
+           c == CMD_GRIPPER || c == CMD_ZAXIS || c == CMD_ABORT;
 }
 
 bool checkCommandFromGUI() {
     while (SerialGUI.available() > 0) {
         char c = SerialGUI.read();
 
-        if (c == '\r') {
+        if (c == CMD_TERMINATOR) {
             if (guiInput.length() > 1 && isValidCommandChar(guiInput.charAt(0))) {
                 String rawValue = guiInput.substring(1);
                 if (isNumeric(rawValue)) {
@@ -75,8 +74,7 @@ bool checkCommandFromGUI() {
 // ===========================================
 void handleGUICommand() {
     if (bootDiscard || guiCommand == 0 || guiValue < 0) {
-        // No imprimir error durante fase de limpieza inicial
-        return;
+        return;  // Ignora comandos inválidos durante fase de arranque
     }
 
     SerialGUI.print("Received: ");
@@ -87,9 +85,9 @@ void handleGUICommand() {
     // Comandos para Nodo Wheel
     // ---------------------------
     if (
-        (guiCommand == CMD_SHIELD && (guiValue == VAL_SHIELD_OPEN || guiValue == VAL_SHIELD_CLOSE)) ||
-        (guiCommand == CMD_PLATE  && (guiValue == VAL_PLATE_UP    || guiValue == VAL_PLATE_DOWN)) ||
-        (guiCommand == CMD_SAMPLE && (guiValue == VAL_SAMPLE_PREV || guiValue == VAL_SAMPLE_NEXT))
+        (guiCommand == CMD_SHIELD && (guiValue == ARG_SHIELD_OPEN || guiValue == ARG_SHIELD_CLOSE)) ||
+        (guiCommand == CMD_PLATE  && (guiValue == ARG_PLATE_UP    || guiValue == ARG_PLATE_DOWN))  ||
+        (guiCommand == CMD_SAMPLE_WHEEL && guiValue == ARG_SAMPLE_NEXT)
     ) {
         sendToWheel(guiCommand, guiValue);
         SerialGUI.println(">> Command forwarded to Wheel Node");
@@ -99,9 +97,9 @@ void handleGUICommand() {
     // Comandos para Nodo Gripper
     // ---------------------------
     else if (
-        (guiCommand == CMD_GRIPPER  && (guiValue == VAL_GRIPPER_RELEASE || guiValue == VAL_GRIPPER_CATCH)) ||
-        (guiCommand == CMD_POSITION && (guiValue == VAL_POS_Y1 || guiValue == VAL_POS_Y2 || guiValue == VAL_POS_Y3)) ||
-        (guiCommand == CMD_STOP     && guiValue == VAL_STOP)
+        (guiCommand == CMD_GRIPPER && (guiValue == ARG_GRIPPER_CLOSE || guiValue == ARG_GRIPPER_OPEN)) ||
+        (guiCommand == CMD_ZAXIS   && (guiValue == ARG_ZAXIS_POS1 || guiValue == ARG_ZAXIS_POS2 || guiValue == ARG_ZAXIS_POS3)) ||
+        (guiCommand == CMD_ABORT   && guiValue == 0)
     ) {
         sendToGripper(guiCommand, guiValue);
         SerialGUI.println(">> Command forwarded to Gripper Node");

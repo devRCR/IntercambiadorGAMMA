@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "CommandExecutor.h"
 #include "Hardware_NodeWheel.h"
-#include "CommandDefinitions.h"
+#include "Protocol_Definitions.h"
 #include "Protocol_States.h"
 
 #include "PlateControl.h"
@@ -30,52 +30,49 @@ void sendERR(int code) {
 // Procesa el comando recibido desde cualquier fuente
 // --------------------------------------------------
 void executeCommand(char cmd, int val) {
-    // Validación básica
-    if (cmd == 0 || val < 0) {
-        Serial.println("ERROR: Invalid command or non-numeric value.");
-        sendERR(STATE_UNKNOWN);
-        return;
-    }
-
     Serial.print("Received : ");
     Serial.print(cmd);
     Serial.println(val);
 
     switch (cmd) {
+        // ===================== NODO WHEEL =====================
         case CMD_SHIELD:
-            if (val == VAL_SHIELD_OPEN || val == VAL_SHIELD_CLOSE) {
-                processShieldCommand(val, true);  // true = responder al maestro
+            if (val == ARG_SHIELD_OPEN || val == ARG_SHIELD_CLOSE) {
+                processShieldCommand(val, true);  // true = responde al maestro
             } else {
                 sendERR(STATE_UNKNOWN);
             }
             break;
 
         case CMD_PLATE:
-            if (val == VAL_PLATE_UP || val == VAL_PLATE_DOWN) {
+            if (val == ARG_PLATE_UP || val == ARG_PLATE_DOWN) {
                 processPlateCommand(val, true);
             } else {
                 sendERR(STATE_UNKNOWN);
             }
             break;
 
-        case CMD_SAMPLE:
-            if (val == VAL_SAMPLE_PREV || val == VAL_SAMPLE_NEXT) {
+        case CMD_SAMPLE_WHEEL:
+            if (val == ARG_SAMPLE_NEXT) {
                 processSampleCommand(val, true);
             } else {
                 sendERR(STATE_UNKNOWN);
             }
             break;
 
-        case CMD_STOP:
-            if (val == VAL_STOP) {
-                Serial.println(">> Emergency stop received.");
-                sendACK(STATE_EMERGENCY_STOP);  // Respuesta inmediata permitida
-            } else {
-                sendERR(STATE_UNKNOWN);
-            }
+        // ===================== CONTROL GENERAL =====================
+        case CMD_ABORT:
+            Serial.println(">> Emergency stop received.");
+            sendACK(STATE_EMERGENCY_STOP);  // Respuesta inmediata permitida
+            break;
+
+        case CMD_PING:
+            Serial.println(">> Ping received.");
+            sendACK(STATE_READY);  // Podrías usar otro estado según tu lógica
             break;
 
         default:
             sendERR(STATE_UNKNOWN);
+            break;
     }
 }

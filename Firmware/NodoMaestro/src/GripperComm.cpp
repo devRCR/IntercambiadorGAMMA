@@ -2,6 +2,7 @@
 #include "GripperComm.h"
 #include "Protocol_Definitions.h"
 #include "Protocol_States.h"
+#include "Hardware_NodeMaster.h"
 
 static String gripperInput = "";
 static char ackType = 0;
@@ -9,32 +10,31 @@ static int ackValue = 0;
 bool gripperNodeActive = false;
 
 bool checkAckFromGripper() {
-    while (SerialGripper.available() > 0) {
-        char c = SerialGripper.read();
-        if (c == '\r') {
+    while (SerialNodeGripper.available() > 0) {
+        char c = SerialNodeGripper.read();
+        if (c == CMD_TERMINATOR) {
             if (gripperInput.length() > 0) {
                 ackType = gripperInput.charAt(0);
                 ackValue = gripperInput.substring(1).toInt();
                 gripperInput = "";
 
-                if (ackType == 'K') {
+                if (ackType == RESP_ACK) {
                     SerialGUI.print("OK [Gripper]: ");
-                    // Interpretar ACK específico
                     switch (ackValue) {
-                        case STATE_GRIPPER_RELEASE:
+                        case STATE_GRIPPER_OPEN:
                             SerialGUI.println("Gripper released.");
                             break;
-                        case STATE_GRIPPER_CATCH:
+                        case STATE_GRIPPER_CLOSED:
                             SerialGUI.println("Gripper captured.");
                             break;
-                        case STATE_POS_Y1:
-                            SerialGUI.println("Position Y1 reached.");
+                        case STATE_ZAXIS_POS1:
+                            SerialGUI.println("Z-axis position 1 (bottom).");
                             break;
-                        case STATE_POS_Y2:
-                            SerialGUI.println("Position Y2 reached.");
+                        case STATE_ZAXIS_POS2:
+                            SerialGUI.println("Z-axis position 2 (middle).");
                             break;
-                        case STATE_POS_Y3:
-                            SerialGUI.println("Position Y3 reached.");
+                        case STATE_ZAXIS_POS3:
+                            SerialGUI.println("Z-axis position 3 (top).");
                             break;
                         case STATE_EMERGENCY_STOP:
                             SerialGUI.println("Emergency stop executed.");
@@ -43,8 +43,8 @@ bool checkAckFromGripper() {
                             SerialGUI.print("ACK code = ");
                             SerialGUI.println(ackValue);
                     }
-                    return true;  // ACK válido
-                } else if (ackType == 'E') {
+                    return true;
+                } else if (ackType == RESP_ERROR) {
                     SerialGUI.print("ERROR [Gripper]: Code = ");
                     SerialGUI.println(ackValue);
                     return false;
@@ -58,15 +58,15 @@ bool checkAckFromGripper() {
 }
 
 void initGripperComm() {
-    SerialGripper.begin(9600);
-    while (SerialGripper.available()) SerialGripper.read();
+    SerialNodeGripper.begin(9600);
+    while (SerialNodeGripper.available()) SerialNodeGripper.read();
 
-    sendToGripper(CMD_STOP, VAL_STOP);
+    sendToGripper(CMD_PING, 0);  // Verificación de nodo al inicio
     unsigned long t_start = millis();
     gripperNodeActive = false;
 
     while (millis() - t_start < 300) {
-        if (SerialGripper.available()) {
+        if (SerialNodeGripper.available()) {
             if (checkAckFromGripper()) {
                 gripperNodeActive = true;
                 break;
@@ -82,10 +82,7 @@ void initGripperComm() {
 }
 
 void sendToGripper(char cmd, int val) {
-    SerialGripper.print(cmd);
-    SerialGripper.print(val);
-    SerialGripper.print('\r');
+    SerialNodeGripper.print(cmd);
+    SerialNodeGripper.print(val);
+    SerialNodeGripper.print(CMD_TERMINATOR);
 }
-
-
-// Fin del archivo GripperComm.cpp
