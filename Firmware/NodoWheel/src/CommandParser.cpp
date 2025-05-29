@@ -1,15 +1,21 @@
 #include <Arduino.h>
 #include "CommandParser.h"
-#include "Hardware_NodeWheel.h"
+#include "Hardware_NodeWheel.h"  // Definición de SerialNodeMaster
 
-// Variables internas de comando
-static String inputLocal = "";
-static String inputMaster = "";
-static char parsedCommand = 0;
-static int parsedValue = -1;
-static CommandSource parsedSource = SOURCE_NONE;
+// ============================================================================
+// VARIABLES INTERNAS PARA RECEPCIÓN Y ALMACENAMIENTO DE COMANDOS
+// ============================================================================
 
-// Verifica si una cadena es numérica
+static String inputLocal = "";     // Buffer para entrada desde USB (Serial)
+static String inputMaster = "";    // Buffer para entrada desde Nodo Maestro
+static char parsedCommand = 0;     // Carácter del comando (ej. 'G', 'Z')
+static int parsedValue = -1;       // Valor entero asociado al comando (ej. 0, 1)
+static CommandSource parsedSource = SOURCE_NONE; // Origen del comando actual
+
+
+// ============================================================================
+// FUNCIÓN AUXILIAR: Verifica si una cadena es completamente numérica
+// ============================================================================
 bool isNumeric(const String& s) {
     if (s.length() == 0) return false;
     for (char c : s) {
@@ -18,11 +24,17 @@ bool isNumeric(const String& s) {
     return true;
 }
 
-// Comando desde Serial0 (USB/terminal)
+
+// ============================================================================
+// FUNCIÓN: checkLineFromLocal()
+// Lee el puerto USB (Serial) y analiza si hay un comando válido disponible.
+// ============================================================================
 bool checkLineFromLocal() {
     while (Serial.available() > 0) {
         char c = Serial.read();
+
         if (c == '\r') {
+            // Fin de línea: procesar si es válido
             if (inputLocal.length() > 1) {
                 String val = inputLocal.substring(1);
                 if (isNumeric(val)) {
@@ -37,7 +49,7 @@ bool checkLineFromLocal() {
                 inputLocal = "";
                 return true;
             } else {
-                inputLocal = "";
+                inputLocal = "";  // Comando vacío o inválido
             }
         } else if (c != '\n') {
             inputLocal += c;
@@ -46,10 +58,15 @@ bool checkLineFromLocal() {
     return false;
 }
 
-// Comando desde Serial2 (Nodo Maestro)
+
+// ============================================================================
+// FUNCIÓN: checkLineFromMaster()
+// Lee el puerto SerialNodeMaster y analiza si hay un comando válido.
+// ============================================================================
 bool checkLineFromMaster() {
     while (SerialNodeMaster.available() > 0) {
         char c = SerialNodeMaster.read();
+
         if (c == '\r') {
             if (inputMaster.length() > 1) {
                 String val = inputMaster.substring(1);
@@ -65,7 +82,7 @@ bool checkLineFromMaster() {
                 inputMaster = "";
                 return true;
             } else {
-                inputMaster = "";
+                inputMaster = "";  // Comando vacío o inválido
             }
         } else if (c != '\n') {
             inputMaster += c;
@@ -74,14 +91,22 @@ bool checkLineFromMaster() {
     return false;
 }
 
-// Comando desde botón físico
+
+// ============================================================================
+// FUNCIÓN: setCommandFromButton()
+// Permite registrar un comando proveniente de un botón físico externo.
+// ============================================================================
 void setCommandFromButton(char cmd, int val) {
     parsedCommand = cmd;
     parsedValue = val;
     parsedSource = SOURCE_BUTTON;
 }
 
-// Getters
+
+// ============================================================================
+// FUNCIONES GETTER
+// Proveen acceso al comando recibido y su fuente
+// ============================================================================
 char getParsedCommand() {
     return parsedCommand;
 }
@@ -94,9 +119,13 @@ CommandSource getParsedSource() {
     return parsedSource;
 }
 
+
+// ============================================================================
+// FUNCIÓN: clearParsedCommand()
+// Limpia las variables internas para aceptar un nuevo comando.
+// ============================================================================
 void clearParsedCommand() {
     parsedCommand = 0;
     parsedValue = -1;
     parsedSource = SOURCE_NONE;
 }
-// Función para imprimir el comando analizado (para depuración)
