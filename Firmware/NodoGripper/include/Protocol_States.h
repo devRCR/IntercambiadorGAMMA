@@ -45,6 +45,7 @@
 // CÓDIGOS DE ERROR (400–499)
 // =====================================================================
 #define ERROR_UNKNOWN_COMMAND     400
+#define ERROR_INVALID_ARGUMENT    401 
 #define ERROR_TIMEOUT_PLATE       410
 #define ERROR_TIMEOUT_SHIELD      411
 #define ERROR_TIMEOUT_WHEEL       412

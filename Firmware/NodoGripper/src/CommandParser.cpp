@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "CommandParser.h"
-#include "Hardware_NodeGripper.h"  // Definición de SerialNodeMaster
+#include "Hardware_GripperNode.h"  // Definición de SerialNodeMaster
 
 // ============================================================================
 // VARIABLES INTERNAS PARA RECEPCIÓN Y ALMACENAMIENTO DE COMANDOS

@@ -57,6 +57,8 @@
 #define ARG_ZAXIS_POS2           1  // Posición intermedia
 #define ARG_ZAXIS_POS3           2  // Posición superior
 
+#define ARG_ABORT                1  // Parada de emergencia nodo Gripper
+
 
 /* =====================================================================
  * NODO MAESTRO: comandos internos de coordinación o prueba
