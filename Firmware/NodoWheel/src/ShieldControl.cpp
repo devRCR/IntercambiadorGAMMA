@@ -2,6 +2,8 @@
 #include "ShieldControl.h"
 #include "Hardware_NodeWheel.h"
 #include "Protocol_States.h"
+#include "CommandExecutor.h"
+#include "Protocol_Definitions.h"
 
 // -------------------------------
 // Variables internas de control
@@ -27,18 +29,14 @@ void processShieldCommand(int value, bool replyToMaster) {
     if (value == SHIELD_OPEN && digitalRead(SENS_GREEN)) {
         Serial.println("Shield already open.");
         if (currentReplyToMaster) {
-            SerialNodeMaster.print('K');
-            SerialNodeMaster.print(STATE_SHIELD_OPEN);
-            SerialNodeMaster.print('\r');
+            sendACK(STATE_SHIELD_OPEN);
         }
         return;
     }
     if (value == SHIELD_CLOSE && digitalRead(SENS_BLUE)) {
         Serial.println("Shield already closed.");
         if (currentReplyToMaster) {
-            SerialNodeMaster.print('K');
-            SerialNodeMaster.print(STATE_SHIELD_CLOSED);
-            SerialNodeMaster.print('\r');
+            sendACK(STATE_SHIELD_CLOSED);
         }
         return;
     }
@@ -47,9 +45,7 @@ void processShieldCommand(int value, bool replyToMaster) {
     if (!(digitalRead(SENSOR_BOTTOM1) && digitalRead(SENSOR_BOTTOM2))) {
         Serial.println("Safety violation: plate is not down.");
         if (currentReplyToMaster) {
-            SerialNodeMaster.print('E');
-            SerialNodeMaster.print(2);  // Código de error: condición de seguridad
-            SerialNodeMaster.print('\r');
+            sendERR(ERROR_PLATE_NOT_DOWN );  // Código de error: condición de seguridad
         }
         return;
     }
@@ -83,9 +79,7 @@ void updateShieldAction() {
             SHIELD_STATE = 0;
             Serial.println("Shield fully opened.");
             if (currentReplyToMaster) {
-                SerialNodeMaster.print('K');
-                SerialNodeMaster.print(STATE_SHIELD_OPEN);
-                SerialNodeMaster.print('\r');
+                sendACK(STATE_SHIELD_OPEN);
                 Serial.println(">> ACK sent: STATE_SHIELD_OPEN");
             }
         }
@@ -98,9 +92,7 @@ void updateShieldAction() {
             SHIELD_STATE = 0;
             Serial.println("Shield fully closed.");
             if (currentReplyToMaster) {
-                SerialNodeMaster.print('K');
-                SerialNodeMaster.print(STATE_SHIELD_CLOSED);
-                SerialNodeMaster.print('\r');
+                sendACK(STATE_SHIELD_CLOSED);
                 Serial.println(">> ACK sent: STATE_SHIELD_CLOSE");
             }
         }
@@ -113,9 +105,7 @@ void updateShieldAction() {
         SHIELD_STATE = 0;
         Serial.println("Shield movement timeout.");
         if (currentReplyToMaster) {
-            SerialNodeMaster.print('E');
-            SerialNodeMaster.print(6);  // Código de error: timeout en blindaje
-            SerialNodeMaster.print('\r');
+            sendERR(ERROR_TIMEOUT_SHIELD );  // Código de error: timeout en blindaje
         }
     }
 }
